@@ -25,8 +25,13 @@ namespace MobileStoreWithSQLite
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<MobileStoreContext>(option => option.UseSqlServer(connection));
+            services.AddTransient<DbOptionsFactory, SQLiteOptionsFactory>();
+            services.AddDbContext<MobileStoreContext>((sp, option) =>
+            {
+                var optionsFactoty = sp.GetService<DbOptionsFactory>();
+                optionsFactoty.Configuration(option, Configuration);
+            });
+
             services.AddControllersWithViews();
         }
 

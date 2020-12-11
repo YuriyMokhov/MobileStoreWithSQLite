@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MobileStoreWithSQLite.Data;
+using MobileStoreWithSQLite.Models.Domain;
 using MobileStoreWithSQLite.Models.View;
 
 namespace MobileStoreWithSQLite.Controllers
@@ -29,6 +30,51 @@ namespace MobileStoreWithSQLite.Controllers
                 return View(phone);
             else throw new Exception($"Phone with id = {id} not found!");
             
+        }
+
+        [HttpPost]
+        public IActionResult Add(Phone newPhone)
+        {
+            _context.Phones.Add(newPhone);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public IActionResult Add()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if (id.HasValue)
+            {
+                var phone = _context.Phones.Single(x => x.Id == id.Value);
+                return View(phone);
+            }
+            else throw new Exception($"PhoneId is required for that operation!");
+
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Phone editedPhone)
+        {
+            var phone =_context.Phones.SingleOrDefault(x => x.Id == editedPhone.Id);
+            if(phone != null)
+            {
+                if (phone.Name != editedPhone.Name)
+                    phone.Name = editedPhone.Name;
+                if (phone.Company != editedPhone.Company)
+                    phone.Company = editedPhone.Company;
+                if (phone.Price != editedPhone.Price)
+                    phone.Price = editedPhone.Price;
+
+                _context.SaveChanges();
+            }
+            else throw new Exception($"Phone with id = {editedPhone.Id} not found!");
+
+            return RedirectToAction("Index");
         }
         public IActionResult Index()
         {

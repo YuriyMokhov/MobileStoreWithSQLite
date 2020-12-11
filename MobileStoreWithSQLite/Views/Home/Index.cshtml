@@ -18,12 +18,16 @@
         @foreach(var phone in Model)
         {
     <tr>
-       
+
         <td>@phone.Name</td>
         <td>@phone.Company</td>
         <td>@phone.Price</td>
         <td><a href="/Home/Buy/@phone.Id">Buy Now</a></td>
+        <td><a href="/Home/Edit/@phone.Id">Edit</a></td>
     </tr>
         }
     </table>
+</div>
+<div class="my-btn">
+    <a class="btn btn-link" href="/Home/Add">Add new phone</a>
 </div>

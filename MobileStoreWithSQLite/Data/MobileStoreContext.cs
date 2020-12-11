@@ -9,12 +9,15 @@ namespace MobileStoreWithSQLite.Data
 {
     public class MobileStoreContext : DbContext
     {
-        public MobileStoreContext(DbContextOptions<MobileStoreContext> options)
+
+        public MobileStoreContext(DbContextOptions options)
            : base(options)
         {
             Database.EnsureCreated();
+
         }
-     
+
+
         public DbSet<Phone> Phones { get; set; }
         public DbSet<Order> Orders { get; set; }
     }
