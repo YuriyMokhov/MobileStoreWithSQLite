@@ -45,6 +45,10 @@ namespace MobileStoreWithSQLite.Controllers
             return View();
         }
 
+        public IActionResult GetStatusCode()
+        {
+            return StatusCode(404);
+        }
         [HttpGet]
         public IActionResult Edit(int? id)
         {
