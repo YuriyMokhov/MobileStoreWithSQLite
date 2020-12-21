@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MobileStoreWithSQLite.Data;
@@ -15,6 +17,7 @@ namespace MobileStoreWithSQLite.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly MobileStoreContext _context;
+      //  private readonly IWebHostEnvironment _env;
 
         public HomeController(ILogger<HomeController> logger, MobileStoreContext context)
         {
@@ -55,6 +58,18 @@ namespace MobileStoreWithSQLite.Controllers
             }
             else throw new Exception($"PhoneId is required for that operation!");
 
+        }
+
+        [HttpGet]
+        public IActionResult GetPhysicalFile([FromServices] IWebHostEnvironment env)
+        {
+            return PhysicalFile(Path.Combine(env.ContentRootPath, "Files\\Clr.pdf"), "application/pdf", "Clr.pdf");
+        }
+
+        [HttpGet]
+        public IActionResult GetVirtualFile()
+        {
+            return File("Clr.pdf", "application/pdf", "Clr.pdf");
         }
 
         [HttpPost]
