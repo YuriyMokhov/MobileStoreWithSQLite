@@ -59,6 +59,9 @@ namespace MobileStoreWithSQLite
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    name: "statusCode",
+                    pattern: "GetStatusCode/{code}", new { controller = "Home", action = "GetStatusCode" });
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
