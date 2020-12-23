@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -17,12 +18,14 @@ namespace MobileStoreWithSQLite.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly MobileStoreContext _context;
+        private readonly IMapper _mapper;
       //  private readonly IWebHostEnvironment _env;
 
-        public HomeController(ILogger<HomeController> logger, MobileStoreContext context)
+        public HomeController(ILogger<HomeController> logger, MobileStoreContext context, IMapper mapper)
         {
             _logger = logger;
             _context = context;
+            _mapper = mapper;
         }
 
         public IActionResult Buy(int? id)
@@ -30,15 +33,20 @@ namespace MobileStoreWithSQLite.Controllers
             if (!id.HasValue) RedirectToAction("Index");
             var phone = _context.Phones.SingleOrDefault(x => x.Id == id);
             if (phone != null)
-                return View(phone);
+            {
+                var vm = _mapper.Map<PhoneViewModel>(phone);
+                return View(vm);
+            }
+              
             else throw new Exception($"Phone with id = {id} not found!");
             
         }
 
         [HttpPost]
-        public IActionResult Add(Phone newPhone)
+        public IActionResult Add(PhoneViewModel newPhone)
         {
-            _context.Phones.Add(newPhone);
+            var phone = _mapper.Map<Phone>(newPhone);
+            _context.Phones.Add(phone);
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -48,36 +56,23 @@ namespace MobileStoreWithSQLite.Controllers
             return View();
         }
 
-        public IActionResult GetStatusCode(int code)
-        {
-            return StatusCode(code);
-        }
+     
         [HttpGet]
         public IActionResult Edit(int? id)
         {
             if (id.HasValue)
             {
                 var phone = _context.Phones.Single(x => x.Id == id.Value);
-                return View(phone);
+                var vm = _mapper.Map<PhoneViewModel>(phone);
+                return View(vm);
             }
             else throw new Exception($"PhoneId is required for that operation!");
 
         }
 
-        [HttpGet]
-        public IActionResult GetPhysicalFile([FromServices] IWebHostEnvironment env)
-        {
-            return PhysicalFile(Path.Combine(env.ContentRootPath, "Files\\Clr.pdf"), "application/pdf", "Clr.pdf");
-        }
-
-        [HttpGet]
-        public IActionResult GetVirtualFile()
-        {
-            return File("Clr.pdf", "application/pdf", "Clr.pdf");
-        }
-
+  
         [HttpPost]
-        public IActionResult Edit(Phone editedPhone)
+        public IActionResult Edit(PhoneViewModel editedPhone)
         {
             var phone =_context.Phones.SingleOrDefault(x => x.Id == editedPhone.Id);
             if(phone != null)
@@ -97,9 +92,8 @@ namespace MobileStoreWithSQLite.Controllers
         }
         public IActionResult Index()
         {
-            
-             var phones = _context.Phones.ToList();
-            return View(phones);
+            var vm = _mapper.Map<IList<PhoneViewModel>>(_context.Phones.ToList());
+            return View(vm);
         }
 
         public IActionResult Privacy()
