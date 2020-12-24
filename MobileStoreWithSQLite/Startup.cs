@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MobileStoreWithSQLite.Data;
+using MobileStoreWithSQLite.Services;
 using MobileStoreWithSQLite.Utils;
 
 namespace MobileStoreWithSQLite
@@ -37,6 +38,7 @@ namespace MobileStoreWithSQLite
             services.AddAutoMapper(typeof(AutoMapperProfile));
             services.AddControllersWithViews();
             services.AddTransient<HtmlMusicResult>();
+            services.AddTransient<ICustomService, CustomService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
