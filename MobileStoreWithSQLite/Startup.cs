@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -33,6 +34,7 @@ namespace MobileStoreWithSQLite
                 optionsFactoty.Configuration(option, Configuration);
             });
 
+            services.AddAutoMapper(typeof(AutoMapperProfile));
             services.AddControllersWithViews();
             services.AddTransient<HtmlMusicResult>();
         }
@@ -60,6 +62,9 @@ namespace MobileStoreWithSQLite
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "service",
+                    pattern: "Service/{action}/{code?}", new { controller = "Service", action = "GetStatusCode"});
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

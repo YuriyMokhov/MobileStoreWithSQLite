@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MobileStoreWithSQLite.Data;
 using MobileStoreWithSQLite.Models.Domain;
 using MobileStoreWithSQLite.Models.View;
-using MobileStoreWithSQLite.Utils;
 
 namespace MobileStoreWithSQLite.Controllers
 {
@@ -16,61 +18,35 @@ namespace MobileStoreWithSQLite.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly MobileStoreContext _context;
-        private readonly IWebHostEnvironment _env;
+        private readonly IMapper _mapper;
+      //  private readonly IWebHostEnvironment _env;
 
-        public HomeController(ILogger<HomeController> logger, MobileStoreContext context, IWebHostEnvironment env)
+        public HomeController(ILogger<HomeController> logger, MobileStoreContext context, IMapper mapper)
         {
             _logger = logger;
             _context = context;
-            _env = env;
+            _mapper = mapper;
         }
 
-        [HttpGet]
         public IActionResult Buy(int? id)
         {
             if (!id.HasValue) RedirectToAction("Index");
             var phone = _context.Phones.SingleOrDefault(x => x.Id == id);
             if (phone != null)
-                return View(phone);
+            {
+                var vm = _mapper.Map<PhoneViewModel>(phone);
+                return View(vm);
+            }
+              
             else throw new Exception($"Phone with id = {id} not found!");
             
         }
 
-
-        [HttpGet]
-        public IActionResult Delete(int? id)
-        {
-            if (!id.HasValue) RedirectToAction("Index");
-            var phone = _context.Phones.SingleOrDefault(x => x.Id == id);
-            if (phone != null)
-                return View(phone);
-            else throw new Exception($"Phone with id = {id} not found!");
-        }
-
-        //public IActionResult GetAudio()
-        //{
-        //    return PartialView("_Audio", new Audio() {  Name = "Tool", Src = "https://yadi.sk/d/h3qWV5f5ul4xeA" });
-        //}
-
         [HttpPost]
-        public IActionResult Delete(Phone deletingPhone)
+        public IActionResult Add(PhoneViewModel newPhone)
         {
-            if(deletingPhone == null) RedirectToAction("Index");
-
-            var phone = _context.Phones.SingleOrDefault(x => x.Id == deletingPhone.Id);
-            if (phone != null)
-            {
-                _context.Phones.Remove(phone);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            else throw new Exception($"Phone with id = {deletingPhone.Id} not found!");
-        }
-
-        [HttpPost]
-        public IActionResult Add(Phone newPhone)
-        {
-            _context.Phones.Add(newPhone);
+            var phone = _mapper.Map<Phone>(newPhone);
+            _context.Phones.Add(phone);
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -80,20 +56,23 @@ namespace MobileStoreWithSQLite.Controllers
             return View();
         }
 
+     
         [HttpGet]
         public IActionResult Edit(int? id)
         {
             if (id.HasValue)
             {
                 var phone = _context.Phones.Single(x => x.Id == id.Value);
-                return View(phone);
+                var vm = _mapper.Map<PhoneViewModel>(phone);
+                return View(vm);
             }
             else throw new Exception($"PhoneId is required for that operation!");
 
         }
 
+  
         [HttpPost]
-        public IActionResult Edit(Phone editedPhone)
+        public IActionResult Edit(PhoneViewModel editedPhone)
         {
             var phone =_context.Phones.SingleOrDefault(x => x.Id == editedPhone.Id);
             if(phone != null)
@@ -113,14 +92,8 @@ namespace MobileStoreWithSQLite.Controllers
         }
         public IActionResult Index()
         {
-            
-             var phones = _context.Phones.ToList();
-            return View(phones);
-        }
-
-        public HtmlMusicResult Audio()
-        {
-            return new HtmlMusicResult(_env);
+            var vm = _mapper.Map<IList<PhoneViewModel>>(_context.Phones.ToList());
+            return View(vm);
         }
 
         public IActionResult Privacy()
