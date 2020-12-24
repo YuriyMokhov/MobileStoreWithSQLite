@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MobileStoreWithSQLite.Data;
 using MobileStoreWithSQLite.Models.Domain;
 using MobileStoreWithSQLite.Models.View;
+using MobileStoreWithSQLite.Utils;
 
 namespace MobileStoreWithSQLite.Controllers
 {
@@ -15,13 +16,16 @@ namespace MobileStoreWithSQLite.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly MobileStoreContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public HomeController(ILogger<HomeController> logger, MobileStoreContext context)
+        public HomeController(ILogger<HomeController> logger, MobileStoreContext context, IWebHostEnvironment env)
         {
             _logger = logger;
             _context = context;
+            _env = env;
         }
 
+        [HttpGet]
         public IActionResult Buy(int? id)
         {
             if (!id.HasValue) RedirectToAction("Index");
@@ -30,6 +34,37 @@ namespace MobileStoreWithSQLite.Controllers
                 return View(phone);
             else throw new Exception($"Phone with id = {id} not found!");
             
+        }
+
+
+        [HttpGet]
+        public IActionResult Delete(int? id)
+        {
+            if (!id.HasValue) RedirectToAction("Index");
+            var phone = _context.Phones.SingleOrDefault(x => x.Id == id);
+            if (phone != null)
+                return View(phone);
+            else throw new Exception($"Phone with id = {id} not found!");
+        }
+
+        //public IActionResult GetAudio()
+        //{
+        //    return PartialView("_Audio", new Audio() {  Name = "Tool", Src = "https://yadi.sk/d/h3qWV5f5ul4xeA" });
+        //}
+
+        [HttpPost]
+        public IActionResult Delete(Phone deletingPhone)
+        {
+            if(deletingPhone == null) RedirectToAction("Index");
+
+            var phone = _context.Phones.SingleOrDefault(x => x.Id == deletingPhone.Id);
+            if (phone != null)
+            {
+                _context.Phones.Remove(phone);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            else throw new Exception($"Phone with id = {deletingPhone.Id} not found!");
         }
 
         [HttpPost]
@@ -81,6 +116,11 @@ namespace MobileStoreWithSQLite.Controllers
             
              var phones = _context.Phones.ToList();
             return View(phones);
+        }
+
+        public HtmlMusicResult Audio()
+        {
+            return new HtmlMusicResult(_env);
         }
 
         public IActionResult Privacy()

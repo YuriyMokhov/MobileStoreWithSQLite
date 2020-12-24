@@ -15,4 +15,12 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Files\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Blackfield - Go To Hell.mp3" />
+  </ItemGroup>
+
 </Project>
