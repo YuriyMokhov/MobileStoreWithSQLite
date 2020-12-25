@@ -36,6 +36,7 @@ namespace MobileStoreWithSQLite
 
             services.AddAutoMapper(typeof(AutoMapperProfile));
             services.AddControllersWithViews();
+            services.AddTransient<HtmlMusicResult>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
