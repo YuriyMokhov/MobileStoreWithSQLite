@@ -1,7 +1,4 @@
 ﻿@model IList<PhoneViewModel>
-@{
-    ViewData["Title"] = "Home Page";
-}
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
@@ -31,3 +28,11 @@
 <div class="my-btn">
     <a class="btn btn-link" href="/Home/Add">Add new phone</a>
 </div>
+
+@section footer{ 
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; 2020 - MobileStoreWithSQLite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+</footer>
+}

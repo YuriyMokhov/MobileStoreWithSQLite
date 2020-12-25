@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using MobileStoreWithSQLite.Data;
 using MobileStoreWithSQLite.Models.Domain;
@@ -26,6 +27,7 @@ namespace MobileStoreWithSQLite.Controllers
             _logger = logger;
             _context = context;
             _mapper = mapper;
+            
         }
 
         public IActionResult Buy(int? id)
@@ -89,6 +91,12 @@ namespace MobileStoreWithSQLite.Controllers
             else throw new Exception($"Phone with id = {editedPhone.Id} not found!");
 
             return RedirectToAction("Index");
+        }
+
+        public override void OnActionExecuted(ActionExecutedContext context)
+        {
+            base.OnActionExecuted(context);
+            ViewBag.Title = "From Home Controller";
         }
         public IActionResult Index()
         {
