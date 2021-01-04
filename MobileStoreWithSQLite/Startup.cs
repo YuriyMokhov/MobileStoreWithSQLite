@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.HttpsPolicy; 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,8 +68,12 @@ namespace MobileStoreWithSQLite
                     name: "service",
                     pattern: "Service/{action}/{code?}", new { controller = "Service", action = "GetStatusCode"});
                 endpoints.MapControllerRoute(
+                    name: "api",
+                    pattern: "api/{controller}/{action}");
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapFallbackToController("Fallback", "Service");
             });
         }
     }
