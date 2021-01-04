@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using MobileStoreWithSQLite.Areas.Admin.Models.Domain;
+using MobileStoreWithSQLite.Areas.Admin.Models.View;
 using MobileStoreWithSQLite.Models.Domain;
 using MobileStoreWithSQLite.Models.View;
 using System;
@@ -14,6 +16,7 @@ namespace MobileStoreWithSQLite.Utils
         {
             CreateMap<Phone, PhoneViewModel>();
             CreateMap<PhoneViewModel, Phone>();
+            CreateMap<User, UserViewModel > ();
         }
     }
 }

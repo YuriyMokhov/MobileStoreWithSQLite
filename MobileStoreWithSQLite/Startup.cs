@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MobileStoreWithSQLite.Areas.Admin.Controllers;
 using MobileStoreWithSQLite.Data;
 using MobileStoreWithSQLite.Services;
 using MobileStoreWithSQLite.Utils;
@@ -39,6 +40,8 @@ namespace MobileStoreWithSQLite
             services.AddControllersWithViews();
             services.AddTransient<HtmlMusicResult>();
             services.AddTransient<ICustomService, CustomService>();
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,9 +70,14 @@ namespace MobileStoreWithSQLite
                 endpoints.MapControllerRoute(
                     name: "service",
                     pattern: "Service/{action}/{code?}", new { controller = "Service", action = "GetStatusCode"});
-                endpoints.MapControllerRoute(
-                    name: "api",
-                    pattern: "api/{controller}/{action}");
+                //endpoints.MapControllerRoute(
+                //    name: "api",
+                //    pattern: "api/{controller}/{action}");
+                endpoints.MapAreaControllerRoute(
+                    name: "admin-route",
+                    areaName: "admin",
+                    pattern: "{controller=Admin}/{action}"
+                    );
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

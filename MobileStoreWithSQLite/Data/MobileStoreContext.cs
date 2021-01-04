@@ -7,18 +7,20 @@ using System.Threading.Tasks;
 
 namespace MobileStoreWithSQLite.Data
 {
-    public class MobileStoreContext : DbContext
+    public partial class MobileStoreContext : DbContext
     {
 
         public MobileStoreContext(DbContextOptions options)
            : base(options)
         {
             Database.EnsureCreated();
-
+     
         }
 
 
         public DbSet<Phone> Phones { get; set; }
         public DbSet<Order> Orders { get; set; }
     }
+
+  
 }
