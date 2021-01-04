@@ -22,9 +22,19 @@ namespace MobileStoreWithSQLite.Controllers
             return File("Clr.pdf", "application/pdf", "Clr.pdf");
         }
 
+
+        [Route("/Service/StatusCode/{code?}")]
         public IActionResult GetStatusCode(int code)
         {
             return StatusCode(code);
+        }
+
+     
+        public IActionResult Fallback()
+        {
+            var cr =  this.Content("Fallback routing!");
+            cr.StatusCode = 500;
+            return cr;
         }
     }
 }//http://localhost:5001/service/GetStatusCode/301
