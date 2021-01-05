@@ -1,4 +1,4 @@
-﻿@model IList<PhoneViewModel>
+﻿@model IndexViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -8,20 +8,50 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+<div class="filter-form" style="margin-bottom:16px;min-width:80%">
+    <form method="post" 
+        style="
+        max-width: 80%;
+        margin: 0 auto;
+        border: 1px solid #005cbf;
+        padding: 10px;
+">
+        <div class="form-group">
+            <label asp-for="SelectedCompanyId">Выберите компанию:</label>
+            <select asp-for="SelectedCompanyId" asp-items="Model.Companies.Select(c => new SelectListItem(c.Name, c.Id.ToString()))"></select>
+
+            @*<select asp-for="IndexViewModelFilters.SelectedCompany" class="form-select">
+                <option selected>Выберите компанию</option>
+                @foreach (var company in Model.Companies)
+                {
+                    <option value="@company.Id">@company.Name</option>
+                }
+            </select>*@
+        </div>
+        <button type="submit" class="btn btn-primary">Применить</button>
+    </form>
+
+   
+
+
+</div>
+
 <div class="text-center">
     <table class="table-primary full-width-table" >
         <tr>
-            <td>Id</td>
             <td>Модель</td>
             <td>Производитель</td>
             <td>Цена</td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
-        @foreach(var phone in Model)
+        @foreach(var phone in Model.Phones)
         {
     <tr>
 
         <td>@phone.Name</td>
-        <td>@phone.Company</td>
+        <td>@phone.Company.Name</td>
         <td>@phone.Price</td>
         <td><a href="/Home/Buy/@phone.Id">Buy Now</a></td>
         <td><a href="/Home/Edit/@phone.Id">Edit</a></td>

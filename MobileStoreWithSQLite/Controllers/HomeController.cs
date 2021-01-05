@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MobileStoreWithSQLite.Data;
 using MobileStoreWithSQLite.Models.Domain;
@@ -81,8 +82,8 @@ namespace MobileStoreWithSQLite.Controllers
             {
                 if (phone.Name != editedPhone.Name)
                     phone.Name = editedPhone.Name;
-                if (phone.Company != editedPhone.Company)
-                    phone.Company = editedPhone.Company;
+                //if (phone.Company != editedPhone.Company)
+                //    phone.Company = editedPhone.Company;
                 if (phone.Price != editedPhone.Price)
                     phone.Price = editedPhone.Price;
 
@@ -98,9 +99,28 @@ namespace MobileStoreWithSQLite.Controllers
             base.OnActionExecuted(context);
             ViewBag.Title = "From Home Controller";
         }
+
+    
+        [HttpGet]
         public IActionResult Index()
         {
-            var vm = _mapper.Map<IList<PhoneViewModel>>(_context.Phones.ToList());
+            var vm = new IndexViewModel();
+            var phones = _context.Phones.ToList();
+            var companies = _context.Companies.ToList();
+            vm.Phones = _mapper.Map<IList<PhoneViewModel>>(phones);
+            vm.Companies = _mapper.Map<IList<CompanyViewModel>>(companies);
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public IActionResult Index(IndexViewModel model)
+        {
+            var vm = new IndexViewModel();
+            var phones = _context.Phones.Where(p => p.Company.Id == model.SelectedCompanyId).ToList();
+            var companies = _context.Companies.ToList();
+            vm.Phones = _mapper.Map<IList<PhoneViewModel>>(phones);
+            vm.Companies = _mapper.Map<IList<CompanyViewModel>>(companies);
             return View(vm);
         }
 

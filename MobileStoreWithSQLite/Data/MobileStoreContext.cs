@@ -17,7 +17,7 @@ namespace MobileStoreWithSQLite.Data
      
         }
 
-
+        public DbSet<Company> Companies { get; set; }
         public DbSet<Phone> Phones { get; set; }
         public DbSet<Order> Orders { get; set; }
     }

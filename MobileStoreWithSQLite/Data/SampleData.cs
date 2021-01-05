@@ -11,30 +11,72 @@ namespace MobileStoreWithSQLite.Data
     {
         public static void Initialize(MobileStoreContext context)
         {
-            if (!context.Phones.Any())
+            if (!context.Companies.Any())
             {
+                var apple = new Company
+                {
+                    Name = "Apple",
+                    Country = "U.S.A"
+                };
+                var google = new Company
+                {
+                    Name = "Google",
+                    Country = "U.S.A"
+                };
+                var samsung = new Company
+                {
+                    Name = "Samsung",
+                    Country = "South Korea"
+                };
+
+                context.Companies.AddRange(
+                    apple
+                    , google
+                    , samsung
+                    );
+
+
                 context.Phones.AddRange(
                     new Phone
                     {
                         Name = "iPhone X",
-                        Company = "Apple",
+                        Company = apple,
                         Price = 600
                     },
+                       new Phone
+                       {
+                           Name = "iPhone 8S",
+                           Company = apple,
+                           Price = 600
+                       },
                     new Phone
                     {
                         Name = "Samsung Galaxy Edge",
-                        Company = "Samsung",
+                        Company = samsung,
                         Price = 550
                     },
+                     new Phone
+                     {
+                         Name = "Samsung Galaxy Note",
+                         Company = samsung,
+                         Price = 550
+                     },
                     new Phone
                     {
                         Name = "Pixel 3",
-                        Company = "Google",
+                        Company = google,
                         Price = 500
-                    }
+                    },
+                     new Phone
+                     {
+                         Name = "Pixel 4",
+                         Company = google,
+                         Price = 700
+                     }
                 );
                 context.SaveChanges();
             }
+          
 
             if (!context.Users.Any())
             {

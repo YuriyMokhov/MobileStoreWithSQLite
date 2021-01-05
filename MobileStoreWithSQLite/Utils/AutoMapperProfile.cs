@@ -16,7 +16,9 @@ namespace MobileStoreWithSQLite.Utils
         {
             CreateMap<Phone, PhoneViewModel>();
             CreateMap<PhoneViewModel, Phone>();
-            CreateMap<User, UserViewModel > ();
+            CreateMap<User, UserViewModel> ();
+            CreateMap<Company, CompanyViewModel>();
+            CreateMap<CompanyViewModel, Company>();
         }
     }
 }
