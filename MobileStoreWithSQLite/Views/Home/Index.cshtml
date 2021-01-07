@@ -17,8 +17,10 @@
         padding: 10px;
 ">
         <div class="form-group">
-            <label asp-for="SelectedCompanyId">Выберите компанию:</label>
-            <select asp-for="SelectedCompanyId" asp-items="Model.Companies.Select(c => new SelectListItem(c.Name, c.Id.ToString()))"></select>
+            <label asp-for="IndexViewModelFilters.SelectedCompanyId">Выберите компанию:</label>
+            <select asp-for="IndexViewModelFilters.SelectedCompanyId" asp-items="Model.Companies.Select(c => new SelectListItem(c.Name, c.Id.ToString()))">
+                <option selected>All</option>
+            </select>
 
             @*<select asp-for="IndexViewModelFilters.SelectedCompany" class="form-select">
                 <option selected>Выберите компанию</option>

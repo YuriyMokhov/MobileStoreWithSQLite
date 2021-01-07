@@ -107,6 +107,10 @@ namespace MobileStoreWithSQLite.Controllers
             var vm = new IndexViewModel();
             var phones = _context.Phones.ToList();
             var companies = _context.Companies.ToList();
+            if(HttpContext.Request.Cookies.ContainsKey("IndexViewModelFilters.SelectedCompanyId"))
+            {
+                vm.IndexViewModelFilters.SelectedCompanyId = Convert.ToInt32(HttpContext.Request.Cookies["IndexViewModelFilters.SelectedCompanyId"]);
+            }
             vm.Phones = _mapper.Map<IList<PhoneViewModel>>(phones);
             vm.Companies = _mapper.Map<IList<CompanyViewModel>>(companies);
 
@@ -117,7 +121,17 @@ namespace MobileStoreWithSQLite.Controllers
         public IActionResult Index(IndexViewModel model)
         {
             var vm = new IndexViewModel();
-            var phones = _context.Phones.Where(p => p.Company.Id == model.SelectedCompanyId).ToList();
+            IList<Phone> phones;
+            if (model.IndexViewModelFilters.SelectedCompanyId == 0)
+                phones = _context.Phones.ToList();
+            else
+            {
+                HttpContext.Response.Cookies.Append("IndexViewModelFilters.SelectedCompanyId", 
+                    model.IndexViewModelFilters.SelectedCompanyId.ToString());
+                
+                phones = _context.Phones.Where(p => p.Company.Id == model.IndexViewModelFilters.SelectedCompanyId).ToList();
+            }
+
             var companies = _context.Companies.ToList();
             vm.Phones = _mapper.Map<IList<PhoneViewModel>>(phones);
             vm.Companies = _mapper.Map<IList<CompanyViewModel>>(companies);

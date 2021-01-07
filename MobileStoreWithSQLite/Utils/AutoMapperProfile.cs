@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MobileStoreWithSQLite.Areas.Admin.Models.Domain;
 using MobileStoreWithSQLite.Areas.Admin.Models.View;
 using MobileStoreWithSQLite.Models.Domain;
@@ -19,6 +20,7 @@ namespace MobileStoreWithSQLite.Utils
             CreateMap<User, UserViewModel> ();
             CreateMap<Company, CompanyViewModel>();
             CreateMap<CompanyViewModel, Company>();
+            CreateMap<SelectListItem, CompanyViewModel>();
         }
     }
 }
