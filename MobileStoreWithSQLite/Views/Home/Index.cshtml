@@ -4,64 +4,68 @@
 }
 @inject ICustomService customService
 
-<div class="text-center">
+<section class="timer text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-<div class="filter-form" style="margin-bottom:16px;min-width:80%">
-    <form method="post" 
-        style="
-        max-width: 80%;
-        margin: 0 auto;
+</section>
+<section>
+    <div class="content">
+        <p>   <vc:timer theme-name="light" /></p>
+
+    </div>
+    @*<div class="content">
+        <p>   <vc:async-test/></p>
+
+    </div>*@
+
+</section>
+<section class="filter filter-form" >
+    <div class="content" style="margin-bottom:16px">
+        <form method="post"
+              style="
         border: 1px solid #005cbf;
         padding: 10px;
 ">
-        <div class="form-group">
-            <label asp-for="IndexViewModelFilters.SelectedCompanyId">Выберите компанию:</label>
-            <select asp-for="IndexViewModelFilters.SelectedCompanyId" asp-items="Model.Companies.Select(c => new SelectListItem(c.Name, c.Id.ToString()))">
-                <option selected>All</option>
-            </select>
-
-            @*<select asp-for="IndexViewModelFilters.SelectedCompany" class="form-select">
-                <option selected>Выберите компанию</option>
-                @foreach (var company in Model.Companies)
-                {
-                    <option value="@company.Id">@company.Name</option>
-                }
-            </select>*@
-        </div>
-        <button type="submit" class="btn btn-primary">Применить</button>
-    </form>
-
-   
+            <div class="form-group">
+                <label asp-for="IndexViewModelFilters.SelectedCompanyId">Выберите компанию:</label>
+                <select asp-for="IndexViewModelFilters.SelectedCompanyId" asp-items="Model.Companies.Select(c => new SelectListItem(c.Name, c.Id.ToString()))">
+                    <option selected>All</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Применить</button>
+        </form>
 
 
-</div>
+    </div>
+</section>
 
-<div class="text-center">
-    <table class="table-primary full-width-table" >
-        <tr>
-            <td>Модель</td>
-            <td>Производитель</td>
-            <td>Цена</td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        @foreach(var phone in Model.Phones)
-        {
-    <tr>
+<section class="phones text-center">
+    <div class="content">
+        <table class="table-primary phones__table">
+            <tr>
+                <td>Модель</td>
+                <td>Производитель</td>
+                <td>Цена</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            @foreach (var phone in Model.Phones)
+            {
+                <tr>
 
-        <td>@phone.Name</td>
-        <td>@phone.Company.Name</td>
-        <td>@phone.Price</td>
-        <td><a href="/Home/Buy/@phone.Id">Buy Now</a></td>
-        <td><a href="/Home/Edit/@phone.Id">Edit</a></td>
-        <td><a href="/Home/Delete/@phone.Id">Delete</a></td>
-    </tr>
-        }
-    </table>
-</div>
+                    <td>@phone.Name</td>
+                    <td>@phone.Company.Name</td>
+                    <td>@phone.Price</td>
+                    <td><a href="/Home/Buy/@phone.Id">Buy Now</a></td>
+                    <td><a href="/Home/Edit/@phone.Id">Edit</a></td>
+                    <td><a href="/Home/Delete/@phone.Id">Delete</a></td>
+                </tr>
+            }
+        </table>
+    </div>
+
+</section>
 <div class="my-btn">
     <a class="btn btn-link" href="/Home/Add">Add new phone</a>
 </div>
@@ -70,6 +74,9 @@
     Src = "https://s155iva.storage.yandex.net/rdisk/5965cfd330bcb94a3d04ad9015f4a1fb89051ab20a8ae04b37aeddf962874df9/5fdb4650/C_bDBdTJ3KB3jYZ6nDSMv9skBomKL8Q7RW98DT4VDdw-BCdRMqczx10AaH1LSE0lDrDf01pZhNJQXEGhdz74qA==?uid=0&filename=Tool%20-%20Jambi.mp3&disposition=attachment&hash=JTJgBNq3iJlzo0VDq%2BHaPrUqrFGC2Hs%2B%2BjbVQ1iAw7ypERED9KIbXFZenG8S0/pVq/J6bpmRyOJonT3VoXnDag%3D%3D&limit=0&content_type=audio%2Fmpeg&owner_uid=23820219&fsize=17947415&hid=1cbcc78cc8af0ecce329bb151267a0e4&media_type=audio&tknv=v2&rtoken=HGNsqqAAd1ZC&force_default=no&ycrid=na-19c297860f1205818e8417042f0f4b54-downloader17f&ts=5b6a79da23400&s=981fd491192af1a681c7dcfcd66213e7431eb984e91492a17bec02b7bcc95b7e&pb=U2FsdGVkX1_-4zWF2rJiMr_kVAIfFtfEfEbgeO2cPik0bg_oRpALQtBIDgcPSKp6cRFQAQT8akTIWuUeXQpqjpnrtErLbNmngRWXp1DCgko" })*@
 
 
-<div>
-    <h4>@customService.Message</h4>
+<div class="message">
+    <div class="content">
+        <h4>@customService.Message</h4>
+    </div>
+   
 </div>
