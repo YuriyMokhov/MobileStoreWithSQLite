@@ -76,7 +76,7 @@ namespace MobileStoreWithSQLite
                 endpoints.MapAreaControllerRoute(
                     name: "admin-route",
                     areaName: "admin",
-                    pattern: "{controller=Admin}/{action}"
+                    pattern: "Admin/{action}", new {controller = "Admin", action = "Index"}
                     );
                 endpoints.MapControllerRoute(
                     name: "default",

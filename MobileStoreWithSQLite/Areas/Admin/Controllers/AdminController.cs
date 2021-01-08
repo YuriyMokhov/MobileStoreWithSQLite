@@ -32,5 +32,33 @@ namespace MobileStoreWithSQLite.Areas.Admin.Controllers
 
             return Json(users);
         }
+
+        [HttpGet]
+        public IActionResult Index()
+        {
+            var vm = _mapper.Map<IList<User>, IList<UserViewModel>>(_context.Users.ToList());
+            return View(vm);
+        }
+
+        [HttpGet]
+        public IActionResult CreateUser()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateUser(UserViewModel userViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = _mapper.Map<UserViewModel, User>(userViewModel);
+                _context.Users.Add(user);
+                _context.SaveChanges();
+            }
+            
+            
+            return RedirectToAction("Index"); //тут по-идее надо сохранять данные в куках
+
+        }
     }
 }
