@@ -32,6 +32,19 @@
                     <option selected>All</option>
                 </select>
             </div>
+
+            <div class="form-group">
+                <label asp-for="IndexViewModelFilters.PartOfName">Поиск по имени телефона:</label>
+                <input type="text" asp-for="IndexViewModelFilters.PartOfName"/> 
+            </div>
+
+            <div class="form-group">
+                <label asp-for="IndexViewModelSort.SelectedSort">Сотрировка:</label>
+                <select asp-for="IndexViewModelSort.SelectedSort" asp-items="Model.SortPhonesByList.Select(s => new SelectListItem(s.GetDescription(), ((int)s).ToString()))">
+                    <option selected>Без сортировки</option>
+                </select>
+            </div>
+
             <button type="submit" class="btn btn-primary">Применить</button>
         </form>
 

@@ -100,20 +100,51 @@ namespace MobileStoreWithSQLite.Controllers
             ViewBag.Title = "From Home Controller";
         }
 
-    
+
+        private void LoadFromCockies(IndexViewModel vm)
+        {
+            if (HttpContext.Request.Cookies.ContainsKey("IndexViewModelFilters.SelectedCompanyId"))
+            {
+                vm.IndexViewModelFilters.SelectedCompanyId = Convert.ToInt32(HttpContext.Request.Cookies["IndexViewModelFilters.SelectedCompanyId"]);
+            }
+            if (HttpContext.Request.Cookies.ContainsKey("IndexViewModelFilters.PartOfName"))
+            {
+                vm.IndexViewModelFilters.PartOfName = HttpContext.Request.Cookies["IndexViewModelFilters.PartOfName"];
+            }
+            if (HttpContext.Request.Cookies.ContainsKey("IndexViewModelSort.SelectedSort"))
+            {
+                vm.IndexViewModelSort.SelectedSort = Enum.Parse<SortPhonesBy>(HttpContext.Request.Cookies["IndexViewModelSort.SelectedSort"]);
+            }
+
+        }
+
+        private void SaveToCockies(IndexViewModel vm)
+        {
+            HttpContext.Response.Cookies.Append("IndexViewModelFilters.SelectedCompanyId",
+                    vm.IndexViewModelFilters.SelectedCompanyId.ToString());
+
+         
+            if (!string.IsNullOrEmpty(vm.IndexViewModelFilters.PartOfName))
+                HttpContext.Response.Cookies.Append("IndexViewModelFilters.PartOfName",
+                      vm.IndexViewModelFilters.PartOfName);
+
+            //coockies
+            HttpContext.Response.Cookies.Append("IndexViewModelSort.SelectedSort",
+                    vm.IndexViewModelSort.SelectedSort.ToString());
+        }
+
         [HttpGet]
         public IActionResult Index()
         {
             var vm = new IndexViewModel();
             var phones = _context.Phones.ToList();
             var companies = _context.Companies.ToList();
-            if(HttpContext.Request.Cookies.ContainsKey("IndexViewModelFilters.SelectedCompanyId"))
-            {
-                vm.IndexViewModelFilters.SelectedCompanyId = Convert.ToInt32(HttpContext.Request.Cookies["IndexViewModelFilters.SelectedCompanyId"]);
-            }
+
+            LoadFromCockies(vm);
+
             vm.Phones = _mapper.Map<IList<PhoneViewModel>>(phones);
             vm.Companies = _mapper.Map<IList<CompanyViewModel>>(companies);
-
+          
             return View(vm);
         }
 
@@ -122,17 +153,45 @@ namespace MobileStoreWithSQLite.Controllers
         {
             var vm = new IndexViewModel();
             IList<Phone> phones;
+
+            var companies = _context.Companies.ToList();
+
+
+            SaveToCockies(model);
+            
             if (model.IndexViewModelFilters.SelectedCompanyId == 0)
                 phones = _context.Phones.ToList();
             else
             {
-                HttpContext.Response.Cookies.Append("IndexViewModelFilters.SelectedCompanyId", 
-                    model.IndexViewModelFilters.SelectedCompanyId.ToString());
-                
                 phones = _context.Phones.Where(p => p.Company.Id == model.IndexViewModelFilters.SelectedCompanyId).ToList();
             }
 
-            var companies = _context.Companies.ToList();
+
+            if (string.IsNullOrEmpty(model.IndexViewModelFilters.PartOfName))
+                phones = _context.Phones.ToList();
+            else
+            {
+                phones = _context.Phones.Where(p => p.Name.ToLower().Contains(model.IndexViewModelFilters.PartOfName.ToLower())).ToList();
+            }
+
+            //sorting
+        
+
+            if (Enum.IsDefined(typeof(SortPhonesBy), model.IndexViewModelSort.SelectedSort))
+            {
+                phones = model.IndexViewModelSort.SelectedSort switch
+                {
+                    SortPhonesBy.PriceAsc => phones = phones.OrderBy(p => p.Price).ToList(),
+                    SortPhonesBy.PriceDesc => phones = phones.OrderByDescending(p => p.Price).ToList(),
+                    SortPhonesBy.CompanyNameAsc => phones.OrderBy(p => p.Company.Name).ToList(),
+                    SortPhonesBy.CompanyNameDesc => phones.OrderByDescending(p => p.Company.Name).ToList(),
+                    SortPhonesBy.PhoneNameAsc => phones.OrderBy(p => p.Name).ToList(),
+                    SortPhonesBy.PhoneNameDesc => phones.OrderByDescending(p => p.Name).ToList(),
+                    _ => phones.OrderBy(p => p.Name).ToList()
+                };
+            }
+
+           
             vm.Phones = _mapper.Map<IList<PhoneViewModel>>(phones);
             vm.Companies = _mapper.Map<IList<CompanyViewModel>>(companies);
             return View(vm);
